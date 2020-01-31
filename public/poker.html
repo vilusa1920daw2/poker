@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Document</title>
+
+</head>
+
+<body>
+
+   <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+   <script type="text/javascript">
+      var codiP;
+      var user;
+      function enviarDatos() {
+         var xhr = new XMLHttpRequest();
+         user = document.getElementById("user").value;
+         console.log(user);
+         codiP = document.getElementById("codiP").value;
+
+
+         xhr.open("POST", "/iniciarJoc/" + codiP + "/" + user, true);
+         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+               document.getElementById("partida").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+
+
+      }
+      function enviarCarta() {
+         var xhr = new XMLHttpRequest();
+
+
+
+         xhr.open("GET", "/obtenirCarta/" + codiP + "/" + user, true);
+
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.status === 200) {
+               document.getElementById("enviar").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+
+
+      }
+      function mostrarCartes() {
+         var xhr = new XMLHttpRequest();
+
+
+
+         xhr.open("GET", "/mostrarCartes/" + codiP + "/" + user, true);
+
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.status === 200) {
+               document.getElementById("mostrar").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+
+
+      }
+      function tirarCarta() {
+         var xhr = new XMLHttpRequest();
+         xhr.open("PUT", "/tirarCarta/" + codiP + "/" + user + "/" + document.getElementById("tcarta").value, true);
+         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.status === 200) {
+               document.getElementById("tirar").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+      }
+      function apostar() {
+         var xhr = new XMLHttpRequest();
+         xhr.open("PUT", "/apostar/" + codiP + "/" + user + "/" + document.getElementById("apuesta").value, true);
+         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.status === 200) {
+               document.getElementById("apostar").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+      }
+      function passar() {
+         var xhr = new XMLHttpRequest();
+         xhr.open("PUT", "/apostar/" + codiP + "/" + user + "/passar", true);
+         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.status === 200) {
+               document.getElementById("passa").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+      }
+      function acabar() {
+         var xhr = new XMLHttpRequest();
+         xhr.open("DELETE", "/acabarPartida/" + codiP, true);
+         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+         xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.status === 200) {
+               document.getElementById("acaba").innerHTML = xhr.response;
+            }
+         }
+         xhr.send();
+      }
+
+
+   </script>
+
+   <input type="text" id="user" placeholder="usuario">
+   <input type="text" id="codiP" placeholder="codi partida">
+   <input type="button" onclick="enviarDatos()" id="datos" value="enviar"></br>
+   <p id="partida"></p></br>
+   <input type="button" onclick="enviarCarta()" value="GET:obtenerCarta"></br>
+   <p id="enviar"></p>
+   <input type="button" onclick="mostrarCartes()" value="GET:mostrarCartes"></br>
+   <p id="mostrar"></p>
+   <input type="text" id="tcarta"><input type="button" onclick="tirarCarta()" value="PUT:tirarCarta"></br>
+   <p id="tirar"></p>
+   <input type="text" id="apuesta"><input type="button" onclick="apostar()" value="PUT:apostar"></br>
+   <p id="apostar"></p>
+   <input type="button" onclick="passar()" value="PUT:apostar/passar"></br>
+   <p id="passa"></p>
+   <input type="button" onclick="acabar()" value="DELETE:acabarPartida"></br>
+   <p id="acaba"></p>
+</body>
+
+</html>
