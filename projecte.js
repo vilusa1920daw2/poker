@@ -6,7 +6,8 @@ var fs = require('fs');
 var http = require('http');
  
 const jwt = require("jsonwebtoken");
-
+var JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
 app.use(bodyParser.json());
 
 
@@ -69,11 +70,18 @@ app.post('/iniciarJoc/:codiPartida/:u', (req, res) => {
             cartes.push(carta);
         }
     }
-    var U = new Usuari(req.params.u, codiP);
-    jug.push(U);
-    var jugPartida=jug.filter(a => a.codiP==codiP);
+    var U = jug.find(a => a.codiU == req.params.u && a.codiP == req.params.codiPartida);
+    if (!U){
+        U = new Usuari(req.params.u, codiP);jug.push(U);
+    }
     
-    res.send("Partida iniciada amb codi: "+codiP+"</br>Usuarios en partida: "+jugPartida.toString());
+    
+    var jugPartida=jug.filter(a => a.codiP==codiP);
+    const token = jwt.sign({
+        sub: codiP,
+        usuari: req.params.u
+    }, "clau", { expiresIn: "3 hours" });
+    res.send("Partida iniciada amb codi: "+codiP+"</br>Usuarios en partida: "+jugPartida.toString()+"</br>Token: "+token);
     
 
 });
